@@ -1,9 +1,47 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { ArrowRight} from "lucide-react";
-
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 export default function SignUp() {
+  const [formData, setFormData] = useState({});
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.success === false) {
+        setLoading(false);
+        setError(data.message);
+        return;
+      }
+      setLoading(false);
+      setError(null);
+      navigate("/sign-in");
+    } catch (error) {
+      setLoading(false);
+      setError(error.message);
+    }
+  };
+
   return (
     <section className="mx-3 mt-14 mb-5 flex bg-[#373a36] rounded-xl shadow-xl overflow-hidden md:mx-auto max-w-sm lg:max-w-4xl font-normaltext">
       <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -21,14 +59,13 @@ export default function SignUp() {
             </h2>
             <p className="mt-2 pt-2 text-white text-sm">
               Already have an account?{" "}
-              <Link to={'/sign-in'}>
-              <span className="font-medium text-[#e6e2dd] text-sm transition-all duration-200 font-funtext hover:underline"
-              >
-                Sign In
-              </span>
+              <Link to={"/sign-in"}>
+                <span className="font-medium text-[#e6e2dd] text-sm transition-all duration-200 font-funtext hover:underline">
+                  Sign In
+                </span>
               </Link>
             </p>
-            <form action="#" method="POST" className="mt-8">
+            <form onSubmit={handleSubmit} className="mt-8">
               <div className="space-y-5">
                 <div>
                   <label
@@ -44,6 +81,7 @@ export default function SignUp() {
                       type="text"
                       placeholder="username"
                       id="username"
+                      onChange={handleChange}
                     ></input>
                   </div>
                 </div>
@@ -61,6 +99,7 @@ export default function SignUp() {
                       type="email"
                       placeholder="email"
                       id="email"
+                      onChange={handleChange}
                     ></input>
                   </div>
                 </div>
@@ -80,16 +119,18 @@ export default function SignUp() {
                       type="password"
                       placeholder="password"
                       id="password"
+                      onChange={handleChange}
                     ></input>
                   </div>
                 </div>
                 <div>
                   <button
-                    type="button"
+                    disabled={loading}
                     className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80
                     active:bg-black/50"
                   >
-                    Create Account <ArrowRight className="ml-2" size={16} />
+                    {loading ? "Loading..." : "Sign Up"}
+                    <ArrowRight className="ml-2" size={16} />
                   </button>
                 </div>
               </div>
@@ -101,7 +142,7 @@ export default function SignUp() {
                 active:bg-white/60"
               >
                 <span className="mr-2 inline-block">
-                  <svg class="h-6 w-6" viewBox="0 0 40 40">
+                  <svg className="h-6 w-6" viewBox="0 0 40 40">
                     <path
                       d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.045 27.2142 24.3525 30 20 30C14.4775 30 10 25.5225 10 20C10 14.4775 14.4775 9.99999 20 9.99999C22.5492 9.99999 24.8683 10.9617 26.6342 12.5325L31.3483 7.81833C28.3717 5.04416 24.39 3.33333 20 3.33333C10.7958 3.33333 3.33335 10.7958 3.33335 20C3.33335 29.2042 10.7958 36.6667 20 36.6667C29.2042 36.6667 36.6667 29.2042 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
                       fill="#FFC107"
@@ -123,6 +164,7 @@ export default function SignUp() {
                 Sign up with Google
               </button>
             </div>
+            {error && <p className="text-red-500 mt-5">{error}</p>}
           </div>
         </div>
       </div>
