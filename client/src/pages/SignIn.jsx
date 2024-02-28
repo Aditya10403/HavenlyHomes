@@ -3,13 +3,24 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // for alerts
+  const [success, setSuccess] = useState(false);
+  const [Error, setError] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,7 +32,8 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      // setLoading(true);
+      dispatch(signInStart()); // *
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -30,47 +42,51 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       if (data.success === false) {
-        setLoading(false);
+        // setLoading(false);
         setError(data.message);
+        dispatch(signInFailure(data.message)); // *
         return;
       }
-      setLoading(false);
+      // setLoading(false);
       setError(null);
+      dispatch(signInSuccess(data)); // *
       setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-        navigate("/");
-      }, 2500);
+      // setTimeout(() => {
+      //   // setSuccess(false);
+      //   dispatch(signInFailure(success.message))
+      //   navigate("/");
+      // }, 2500);
     } catch (error) {
-      setLoading(false);
+      // setLoading(false);
       setError(error.message);
+      dispatch(signInFailure(error.message)); // *
     }
   };
 
   return (
     <>
-    {success && (
+      {success && (
         <div className="w-[180px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[28%] right-[1.8%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#373a36] md:text-[#373a36]">
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
             Welcome to Havenly Homes
           </Alert>
-
           {setTimeout(() => {
             setSuccess(false);
-          }, 3000)}
+            navigate("/");
+          }, 4000)}
         </div>
       )}
-      {error && (
-        <div className="w-[180px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[28%] right-[0%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#373a36] md:text-[#373a36]">
-          {error === "User not found!" ? (
+      {Error && (
+        <div className="w-[180px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[28%] right-[0%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#373a36] md:text-[#e6e2dd] text-[#373a36]">
+          {Error === "User not found!" ? (
             <Alert severity="warning">
               <AlertTitle>Warning</AlertTitle>
               User not found!
             </Alert>
-          ) : error === "Wrong credentials!" ? (
+          ) : Error === "Wrong credentials!" ? (
             <Alert severity="info">
               <AlertTitle>Info</AlertTitle>
               Invalid Credentials
@@ -83,7 +99,7 @@ export default function SignIn() {
           )}
           {setTimeout(() => {
             setError(null);
-          }, 6000)}
+          }, 5000)}
         </div>
       )}
       <section className="mx-3 mt-4 md:mt-14 mb-5 flex bg-[#373a36] rounded-xl shadow-xl overflow-hidden md:mx-auto max-w-sm lg:max-w-4xl font-normaltext transition-all ease-in-out 2s">
