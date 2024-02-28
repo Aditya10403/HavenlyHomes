@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    avatar: {
+      type: String,
+      default:
+        "https://www.bing.com/images/blob?bcid=qPZJ.mMAa7oGip1kTRBmmYJFfDs0......Q",
+    },
   },
   { timestamps: true }
 );
