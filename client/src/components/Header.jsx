@@ -2,7 +2,6 @@ import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import logo from "./logo.png";
 import { useSelector } from "react-redux";
-import Avatar from "./avatar.png"
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -14,7 +13,7 @@ export default function Header() {
             <img
               src={logo}
               alt={"logo"}
-              className="w-[60px] h-[35px] sm:w-[150px] sm:h-[60px]"
+              className="w-[60px] h-[35px] sm:w-[150px] sm:h-[60px] object-contain"
             />
           </h1>
         </Link>
