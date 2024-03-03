@@ -20,63 +20,117 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [filePerc, setFilePerc] = useState(0);
   const [fileSize, setFileSize] = useState(0);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  const [sizepermit, setSizepermit] = useState(true);
 
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
     }
   }, [file]);
+
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
-    // track changes
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        const remaining = (snapshot.bytesTransferred / 1024 / 1024).toFixed(2);
-        setFilePerc(Math.round(progress));
-        setFileSize(remaining);
-      },
-      (error) => {
-        setFileUploadError(true);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, avatar: downloadURL })
-        );
-      }
-    );
+    const extensions = [
+      "gif",
+      "svg",
+      "webp",
+      "jpg",
+      "jpeg",
+      "png",
+      "bmp",
+      "xbm",
+      "tif",
+      "jfif",
+      "ico",
+      "tiff",
+      "svgz",
+      "bmp",
+      "pjp",
+      "apng",
+      "pjpeg",
+      "avif",
+    ];
+    const name =
+      file.name.substring(file.name.lastIndexOf(".") + 1, file.name.length) ||
+      file.name;
+    const permit = extensions.indexOf(name) > -1;
+
+    if (file.size / 1024 / 1024 < 2) {
+      setSizepermit(true);
+    } else {
+      setSizepermit(false);
+    }
+
+    if (permit && sizepermit) {
+      // track changes
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          const size = (snapshot.bytesTransferred / 1024 / 1024).toFixed(2);
+          setFilePerc(Math.round(progress));
+          setFileSize(size);
+        },
+        (error) => {
+          console.log(error);
+          setFileUploadError(true);
+          // setError(true);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+            setFormData({ ...formData, avatar: downloadURL })
+          );
+          setTimeout(() => {
+            setSuccess(true);
+          }, 1000);
+        }
+      );
+    } else {
+      setError(true);
+    }
   };
-  console.log(currentUser);
   return (
     <>
-      {fileUploadError ? (
-        <div className="w-[180px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[28%] right-[0%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#373a36] md:text-[#e6e2dd] text-[#373a36]">
-          <Alert severity="warning">
-            <AlertTitle>Warning</AlertTitle>
-            File not uploaded!
+      {error ? (
+        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[5%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
+          <Alert severity="info">
+            <AlertTitle>Info</AlertTitle>
+            Unauthorized file
           </Alert>
+          {setTimeout(() => {
+            setError(false);
+          }, 5000)}
+        </div>
+      ) : !sizepermit ? (
+        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[5%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
+          <Alert severity="info">
+            <AlertTitle>Info</AlertTitle>
+            Ensure file size less than 2mb
+          </Alert>
+          {setTimeout(() => {
+            setSizepermit(true);
+          }, 5000)}
         </div>
       ) : filePerc > 0 && filePerc < 100 ? (
-        <div className="w-[180px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[28%] right-[1.8%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#373a36] font-funtext">
+        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[5%] right-[5%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#373a36] font-funtext">
           <div className="mb-2 flex justify-between items-center">
             <div className="flex items-center gap-x-3">
               <span className="size-8 flex justify-center items-center border border-gray-200 text-gray-500 rounded-lg dark:border-neutral-700">
                 <img
                   className="flex-shrink-0 size-5 object-cover"
-                  src={formData.avatar || currentUser.avatar}
+                  src={formData.avatar || Avatar}
                   alt=""
                 />
               </span>
               <div>
-                <p className="text-xs font-medium text-gray-800">
-                  Uploading..
-                </p>
+                <p className="text-xs font-medium text-gray-800">{file.name}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-500">
                   {fileSize} Mb
                 </p>
@@ -103,12 +157,15 @@ export default function Profile() {
             </div>
           </div>
         </div>
-      ) : filePerc === 100 ? (
-        <div className="w-[180px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[28%] right-[1.8%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#373a36] md:text-[#373a36]">
+      ) : filePerc === 100 && success ? (
+        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[1%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#d48166] md:text-[#d48166] lg:text-[#e6e2dd]">
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
             Image successfully uploaded
           </Alert>
+          {setTimeout(() => {
+            setSuccess(false);
+          }, 4000)}
         </div>
       ) : (
         ""
@@ -130,7 +187,7 @@ export default function Profile() {
               <img
                 onClick={() => fileRef.current.click()}
                 className="mt-2 inline-block h-14 w-14 rounded-full shadow-md object-cover cursor-pointer"
-                src={formData.avatar ||currentUser.avatar}
+                src={formData.avatar || currentUser.avatar}
                 alt="Dan_Abromov"
               />
             </div>
