@@ -1,6 +1,6 @@
 import { SquarePen, UserX, LogOut, NotebookTabs } from "lucide-react";
 import Avatar from "../components/avatar.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRef, useState, useEffect } from "react";
 import {
   getDownloadURL,
@@ -9,14 +9,21 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+} from "../redux/user/userSlice";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
 export default function Profile() {
+  const dispatch = useDispatch();
   const fileRef = useRef(null);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, err } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [formData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [filePerc, setFilePerc] = useState(0);
   const [fileSize, setFileSize] = useState(0);
@@ -96,6 +103,34 @@ export default function Profile() {
       setError(true);
     }
   };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart()); // *
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      dispatch(updateUserSuccess(data)); // *
+      setUpdateSuccess(true);
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
+    }
+  };
+
   return (
     <>
       {error ? (
@@ -172,7 +207,7 @@ export default function Profile() {
       )}
       <section className="flex flex-col mx-3 mt-12 md:mt-8  bg-[#d48166] rounded-xl shadow-xl overflow-hidden md:mx-auto max-w-sm lg:w-8/12 font-normaltext px-4 py-3">
         <div className="flex flex-col mx-auto w-[95%] md:w-[90%]">
-          <form className="mt-2 md:mt-3">
+          <form onSubmit={handleSubmit} className="mt-2 md:mt-3">
             <h2 className="text-center text-xl mt-1 md:text-3xl font-bold leading-tight text-[#373a36]">
               Profile
             </h2>
@@ -202,10 +237,12 @@ export default function Profile() {
                 </label>
                 <div className="mt-1 md:mt-2">
                   <input
+                    defaultValue={currentUser.username}
                     className="flex h-8 md:h-10 w-full rounded-md border border-[#e6e2dd] bg-white px-3 py-2 text-sm placeholder:text-[#e6e2dd] focus:outline-none focus:ring-1 focus:ring-[#e6e2dd] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type="text"
                     placeholder="username"
                     id="username"
+                    onChange={handleChange}
                   ></input>
                 </div>
               </div>
@@ -219,10 +256,12 @@ export default function Profile() {
                 </label>
                 <div className="mt-1 md:mt-2">
                   <input
+                    defaultValue={currentUser.email}
                     className="flex h-8 md:h-10 w-full rounded-md border border-[#e6e2dd] bg-white px-3 py-2 text-sm placeholder:text-[#e6e2dd] focus:outline-none focus:ring-1 focus:ring-[#e6e2dd] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type="email"
                     placeholder="email"
                     id="email"
+                    onChange={handleChange}
                   ></input>
                 </div>
               </div>
@@ -247,10 +286,11 @@ export default function Profile() {
               </div>
               <div>
                 <button
+                  disabled={loading}
                   className="inline-flex w-full items-center justify-center rounded-md bg-[#373a36] px-1.5 py-1.5 md:px-3.5 md:py-2.5 font-semibold leading-7 text-white hover:bg-[#373a36]/90
                     active:bg-[#373a36]/70"
                 >
-                  {" Update "}
+                  {loading ? "Loading..." : "Update"}
                   <SquarePen className="ml-2" size={16} />
                 </button>
               </div>
