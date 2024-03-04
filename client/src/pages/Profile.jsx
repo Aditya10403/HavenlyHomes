@@ -16,6 +16,10 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOutUserStart,
+  signInSuccess,
+  signOutUserSuccess,
+  signOutUserFailure,
 } from "../redux/user/userSlice";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -159,6 +163,23 @@ export default function Profile() {
       dispatch(deleteUserFailure(error.message));
     }
   };
+
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart())
+      const res = await fetch('/api/auth/signout');
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signOutUserFailure(data.message));
+        return;
+      }
+      // setAlertError(null);
+      dispatch(signOutUserSuccess(data)); // *
+      // setAlertSuccess(true);
+    } catch (error) {
+      dispatch(signOutUserFailure(error.message));
+    }
+  }
 
   return (
     <>
@@ -388,6 +409,7 @@ export default function Profile() {
 
         <button
           disabled={deleteOption}
+          onClick={handleSignOut}
           className="mx-2 bg-blue-500 px-3 py-2 text-center rounded hover:bg-blue-500/80 active:bg-blue-500/60"
         >
           <LogOut className="ml-2" size={20} />
