@@ -13,6 +13,9 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
 } from "../redux/user/userSlice";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -27,8 +30,10 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [filePerc, setFilePerc] = useState(0);
   const [fileSize, setFileSize] = useState(0);
-  const [success, setSuccess] = useState(false);
+  const [alertSuccess, setAlertSuccess] = useState(false);
+  const [alertError, setAlertError] = useState(null);
   const [error, setError] = useState(false);
+  const [deleteOption, setdeleteOption] = useState(false);
   const [sizepermit, setSizepermit] = useState(true);
 
   useEffect(() => {
@@ -86,7 +91,6 @@ export default function Profile() {
           setFileSize(size);
         },
         (error) => {
-          console.log(error);
           setFileUploadError(true);
           // setError(true);
         },
@@ -94,9 +98,6 @@ export default function Profile() {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
             setFormData({ ...formData, avatar: downloadURL })
           );
-          setTimeout(() => {
-            setSuccess(true);
-          }, 1000);
         }
       );
     } else {
@@ -121,18 +122,67 @@ export default function Profile() {
       });
       const data = await res.json();
       if (data.success === false) {
+        setAlertError(data.message);
         dispatch(updateUserFailure(data.message));
         return;
       }
+      setAlertError(null);
       dispatch(updateUserSuccess(data)); // *
       setUpdateSuccess(true);
+      setAlertSuccess(true);
     } catch (error) {
+      setAlertError(error.message);
       dispatch(updateUserFailure(error.message));
+    }
+  };
+
+  const handledeleteBtn = () => {
+    setdeleteOption(!deleteOption);
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart()); // *
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        // setAlertError(data.message);
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      // setAlertError(null);
+      dispatch(deleteUserSuccess(data)); // *
+      // setAlertSuccess(true);
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
   return (
     <>
+      {deleteOption ? (
+        <div className="w-[300px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[5%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
+          <Alert severity="warning">
+            <AlertTitle>Warning</AlertTitle>
+            <button
+              onClick={handleDeleteUser}
+              className="text-sm border border-black active:text-xs text-red-500 rounded px-2 py-1 mr-2"
+            >
+              Delete Account
+            </button>
+            <button
+              onClick={handledeleteBtn}
+              className="text-sm active:text-xs border border-black rounded px-2 py-1"
+            >
+              Cancel
+            </button>
+          </Alert>
+        </div>
+      ) : (
+        ""
+      )}
       {error ? (
         <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[5%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
           <Alert severity="info">
@@ -141,6 +191,16 @@ export default function Profile() {
           </Alert>
           {setTimeout(() => {
             setError(false);
+          }, 5000)}
+        </div>
+      ) : alertError ? (
+        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[5%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
+          <Alert severity="warning">
+            <AlertTitle>Warning</AlertTitle>
+            {alertError ? alertError : "Unauthorized"}
+          </Alert>
+          {setTimeout(() => {
+            setAlertError(null);
           }, 5000)}
         </div>
       ) : !sizepermit ? (
@@ -192,14 +252,14 @@ export default function Profile() {
             </div>
           </div>
         </div>
-      ) : filePerc === 100 && success ? (
+      ) : alertSuccess ? (
         <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[1%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#d48166] md:text-[#d48166] lg:text-[#e6e2dd]">
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
-            Image successfully uploaded
+            Profile successfully Updated
           </Alert>
           {setTimeout(() => {
-            setSuccess(false);
+            setAlertSuccess(false);
           }, 4000)}
         </div>
       ) : (
@@ -237,6 +297,7 @@ export default function Profile() {
                 </label>
                 <div className="mt-1 md:mt-2">
                   <input
+                    disabled={deleteOption}
                     defaultValue={currentUser.username}
                     className="flex h-8 md:h-10 w-full rounded-md border border-[#e6e2dd] bg-white px-3 py-2 text-sm placeholder:text-[#e6e2dd] focus:outline-none focus:ring-1 focus:ring-[#e6e2dd] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type="text"
@@ -256,6 +317,7 @@ export default function Profile() {
                 </label>
                 <div className="mt-1 md:mt-2">
                   <input
+                    disabled={deleteOption}
                     defaultValue={currentUser.email}
                     className="flex h-8 md:h-10 w-full rounded-md border border-[#e6e2dd] bg-white px-3 py-2 text-sm placeholder:text-[#e6e2dd] focus:outline-none focus:ring-1 focus:ring-[#e6e2dd] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type="email"
@@ -277,6 +339,7 @@ export default function Profile() {
                 </div>
                 <div className="mt-1 md:mt-2">
                   <input
+                    disabled={deleteOption}
                     className="flex h-8 md:h-10 w-full rounded-md border border-[#e6e2dd] bg-white px-3 py-2 text-sm placeholder:text-[#e6e2dd] focus:outline-none focus:ring-1 focus:ring-[#e6e2dd] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type="password"
                     placeholder="password"
@@ -286,7 +349,7 @@ export default function Profile() {
               </div>
               <div>
                 <button
-                  disabled={loading}
+                  disabled={loading || deleteOption}
                   className="inline-flex w-full items-center justify-center rounded-md bg-[#373a36] px-1.5 py-1.5 md:px-3.5 md:py-2.5 font-semibold leading-7 text-white hover:bg-[#373a36]/90
                     active:bg-[#373a36]/70"
                 >
@@ -298,6 +361,7 @@ export default function Profile() {
           </form>
           <div className="mt-3 mb-2 space-y-3">
             <button
+              disabled={deleteOption}
               type="button"
               className="relative inline-flex w-full items-center justify-center rounded-md bg-green-600 px-1.5 py-1.5 md:px-3.5 md:py-2.5 font-semibold text-white hover:bg-gray-100 hover:text-green-500 active:bg-green-500/70 transition-all duration-200 ease-out"
             >
@@ -307,15 +371,25 @@ export default function Profile() {
         </div>
       </section>
       <div className="mx-2 md:mx-auto max-w-sm lg:w-8/12 mt-4 flex justify-between">
-        <button className="mx-2 bg-red-500 px-3 py-2 text-center rounded hover:bg-red-500/80 active:bg-red-500/60">
+        <button
+          disabled={deleteOption}
+          onClick={handledeleteBtn}
+          className="mx-2 bg-red-500 px-3 py-2 text-center rounded hover:bg-red-500/80 active:bg-red-500/60"
+        >
           <UserX className="ml-2" size={20} />
         </button>
-        <button className="mx-2 text-sm font-funtext flex items-center bg-green-500 px-3 py-2 text-center rounded hover:bg-green-500/80 active:bg-green-500/60">
+        <button
+          disabled={deleteOption}
+          className="mx-2 text-sm font-funtext flex items-center bg-green-500 px-3 py-2 text-center rounded hover:bg-green-500/80 active:bg-green-500/60"
+        >
           Show Listings
           <NotebookTabs className="ml-2" size={20} />
         </button>
 
-        <button className="mx-2 bg-blue-500 px-3 py-2 text-center rounded hover:bg-blue-500/80 active:bg-blue-500/60">
+        <button
+          disabled={deleteOption}
+          className="mx-2 bg-blue-500 px-3 py-2 text-center rounded hover:bg-blue-500/80 active:bg-blue-500/60"
+        >
           <LogOut className="ml-2" size={20} />
         </button>
       </div>
