@@ -21,6 +21,7 @@ import {
   signOutUserSuccess,
   signOutUserFailure,
 } from "../redux/user/userSlice";
+import { Link } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
@@ -166,8 +167,8 @@ export default function Profile() {
 
   const handleSignOut = async () => {
     try {
-      dispatch(signOutUserStart())
-      const res = await fetch('/api/auth/signout');
+      dispatch(signOutUserStart());
+      const res = await fetch("/api/auth/signout");
       const data = await res.json();
       if (data.success === false) {
         dispatch(signOutUserFailure(data.message));
@@ -179,7 +180,7 @@ export default function Profile() {
     } catch (error) {
       dispatch(signOutUserFailure(error.message));
     }
-  }
+  };
 
   return (
     <>
@@ -381,13 +382,14 @@ export default function Profile() {
             </div>
           </form>
           <div className="mt-3 mb-2 space-y-3">
-            <button
+            <Link
+              to={"/create-listing"}
               disabled={deleteOption}
               type="button"
               className="relative inline-flex w-full items-center justify-center rounded-md bg-green-600 px-1.5 py-1.5 md:px-3.5 md:py-2.5 font-semibold text-white hover:bg-gray-100 hover:text-green-500 active:bg-green-500/70 transition-all duration-200 ease-out"
             >
               Create Listing
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -406,7 +408,6 @@ export default function Profile() {
           Show Listings
           <NotebookTabs className="ml-2" size={20} />
         </button>
-
         <button
           disabled={deleteOption}
           onClick={handleSignOut}

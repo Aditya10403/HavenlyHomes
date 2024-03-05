@@ -13,7 +13,7 @@ export default function Header() {
             <img
               src={logo}
               alt={"logo"}
-              className="w-[60px] h-[35px] sm:w-[150px] sm:h-[60px] object-contain"
+              className="w-[60px] h-[35px] sm:w-[150px] sm:h-[50px] object-contain"
             />
           </h1>
         </Link>
