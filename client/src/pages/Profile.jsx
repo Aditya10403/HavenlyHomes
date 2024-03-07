@@ -24,6 +24,7 @@ import {
 import { Link } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import { nanoid } from "@reduxjs/toolkit";
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -49,7 +50,7 @@ export default function Profile() {
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
-    const fileName = new Date().getTime() + file.name;
+    const fileName = nanoid() + file.name;
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
