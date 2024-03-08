@@ -1,4 +1,11 @@
-import { SquarePen, UserX, LogOut, NotebookTabs } from "lucide-react";
+import {
+  SquarePen,
+  UserX,
+  LogOut,
+  NotebookTabs,
+  Bolt,
+  XCircle,
+} from "lucide-react";
 import Avatar from "../components/avatar.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useRef, useState, useEffect } from "react";
@@ -32,11 +39,10 @@ export default function Profile() {
   const { currentUser, loading, err } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [formData, setFormData] = useState({});
-  const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [fileUploadError, setFileUploadError] = useState(false);
   const [filePerc, setFilePerc] = useState(0);
   const [fileSize, setFileSize] = useState(0);
   const [alertSuccess, setAlertSuccess] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [alertError, setAlertError] = useState(null);
   const [error, setError] = useState(false);
   const [deleteOption, setdeleteOption] = useState(false);
@@ -199,6 +205,24 @@ export default function Profile() {
     }
   };
 
+  const handleListingDelete = async (listingId) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setDeleteSuccess(false);
+        return;
+      }
+      setDeleteSuccess(true);
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+    } catch (error) {
+      setDeleteSuccess(false);
+    }
+  };
   return (
     <>
       {deleteOption ? (
@@ -299,6 +323,16 @@ export default function Profile() {
           </Alert>
           {setTimeout(() => {
             setAlertSuccess(false);
+          }, 4000)}
+        </div>
+      ) : deleteSuccess ? (
+        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[1%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#d48166] md:text-[#d48166] lg:text-[#e6e2dd]">
+          <Alert severity="success">
+            <AlertTitle>Success</AlertTitle>
+            Listing deleted successfully!
+          </Alert>
+          {setTimeout(() => {
+            setDeleteSuccess(false);
           }, 4000)}
         </div>
       ) : (
@@ -457,15 +491,17 @@ export default function Profile() {
               >
                 <p>{listing.name}</p>
               </Link>
-              <div className="flex flex-col item-center">
+              <div className="flex flex-col item-center gap-3 mr-2">
                 <button
                   onClick={() => handleListingDelete(listing._id)}
                   className="text-red-700 uppercase"
                 >
-                  Delete
+                  <XCircle color="#b91c1c" size={20} />
                 </button>
                 <Link to={`/update-listing/${listing._id}`}>
-                  <button className="text-green-700 uppercase">Edit</button>
+                  <button className="text-green-700 uppercase">
+                    <Bolt color="#15803d" size={20} />
+                  </button>
                 </Link>
               </div>
             </div>
