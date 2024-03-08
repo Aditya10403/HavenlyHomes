@@ -41,6 +41,7 @@ export default function Profile() {
   const [error, setError] = useState(false);
   const [deleteOption, setdeleteOption] = useState(false);
   const [sizepermit, setSizepermit] = useState(true);
+  const [userListings, setUserListings] = useState([]);
 
   useEffect(() => {
     if (file) {
@@ -128,7 +129,7 @@ export default function Profile() {
       });
       const data = await res.json();
       if (data.success === false) {
-        setAlertError(data.message);
+        setAlertError("Email or username already in use");
         dispatch(updateUserFailure(data.message));
         return;
       }
@@ -180,6 +181,21 @@ export default function Profile() {
       // setAlertSuccess(true);
     } catch (error) {
       dispatch(signOutUserFailure(error.message));
+    }
+  };
+
+  const handleShowListings = async () => {
+    try {
+      setAlertError(null);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setAlertError(data.message);
+        return;
+      }
+      setUserListings(data);
+    } catch (error) {
+      setAlertError("Error showing listings");
     }
   };
 
@@ -279,7 +295,7 @@ export default function Profile() {
         <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[1%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#d48166] md:text-[#d48166] lg:text-[#e6e2dd]">
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
-            Profile successfully Updated
+            Profile successfully updated
           </Alert>
           {setTimeout(() => {
             setAlertSuccess(false);
@@ -404,6 +420,7 @@ export default function Profile() {
         </button>
         <button
           disabled={deleteOption}
+          onClick={handleShowListings}
           className="mx-2 text-sm font-funtext flex items-center bg-green-500 px-3 py-2 text-center rounded hover:bg-green-500/80 active:bg-green-500/60"
         >
           Show Listings
@@ -417,6 +434,44 @@ export default function Profile() {
           <LogOut className="ml-2" size={20} />
         </button>
       </div>
+      {userListings && userListings.length > 0 && (
+        <div className="flex flex-col mx-2 items-center md:mx-auto max-w-sm lg:w-8/12 mt-4 justify-between rounded-lg p-3 gap-4">
+          <h1 className="text-center mt-7 text-2xl font-semibold">
+            Your Listings
+          </h1>
+          {userListings.map((listing) => (
+            <div
+              key={listing._id}
+              className="mx-2 w-full items-center mt-4 flex justify-between border border-slate-300 rounded-lg p-3 gap-4"
+            >
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  src={listing.imageUrls[0]}
+                  alt="listing cover"
+                  className="h-16 w-16 object-contain"
+                />
+              </Link>
+              <Link
+                className="flex-1 text-slate-700 font-semibold hover:underline truncate ml-2"
+                to={`/listing/${listing._id}`}
+              >
+                <p>{listing.name}</p>
+              </Link>
+              <div className="flex flex-col item-center">
+                <button
+                  onClick={() => handleListingDelete(listing._id)}
+                  className="text-red-700 uppercase"
+                >
+                  Delete
+                </button>
+                <Link to={`/update-listing/${listing._id}`}>
+                  <button className="text-green-700 uppercase">Edit</button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
