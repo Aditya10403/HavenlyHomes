@@ -38,6 +38,8 @@ export default function Profile() {
   const fileRef = useRef(null);
   const { currentUser, loading, err } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [filePerc, setFilePerc] = useState(0);
   const [fileSize, setFileSize] = useState(0);
