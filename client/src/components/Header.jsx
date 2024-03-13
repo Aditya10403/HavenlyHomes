@@ -7,19 +7,19 @@ export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   return (
     <header className="w-full">
-      <div className="flex justify-between items-center mx-auto p-3 bg-[#d48166] font-funtext shadow-md">
+      <div className="flex justify-between items-center mx-auto p-2 md:p-3 bg-[#d48166] font-funtext shadow-md">
         <Link to={"/"}>
           <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
             <img
               src={logo}
               alt={"logo"}
-              className="w-[60px] h-[35px] sm:w-[150px] sm:h-[50px] object-contain"
+              className="w-[50px] h-[30px] md:w-[130px] md:h-[40px] object-contain"
             />
           </h1>
         </Link>
         <form className="bg-white sm:m-auto ml-3 px-3 py-2 sm:px-4 sm:py-3 rounded-3xl flex items-center text-[#d48166]">
           <input
-            className="bg-transparent focus:outline-none w-24 lg:w-72 placeholder:text-[#d48166] text-sm placeholder:text-sm"
+            className="bg-transparent focus:outline-none w-40 md:w-80 placeholder:text-[#d48166] text-sm placeholder:text-sm"
             type="text"
             placeholder="Search..."
           />
