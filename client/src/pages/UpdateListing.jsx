@@ -307,7 +307,7 @@ export default function UpdateListing() {
         <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[1%] md:top-[10%] md:right-[2%] transition-all ease-in lg:text-[#e6e2dd]">
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
-            Listing created successfully
+            Listing updated successfully!
           </Alert>
           {setTimeout(() => {
             setSuccess(false);
@@ -330,7 +330,7 @@ export default function UpdateListing() {
               placeholder="Title"
               className="border p-3 rounded-lg"
               id="name"
-              maxLength="62"
+              maxLength="40"
               minLength="10"
               required
               onChange={handleChange}
@@ -350,6 +350,7 @@ export default function UpdateListing() {
               placeholder="Address"
               className="border p-3 rounded-lg"
               id="address"
+              maxLength="62"
               required
               onChange={handleChange}
               value={formData.address}
