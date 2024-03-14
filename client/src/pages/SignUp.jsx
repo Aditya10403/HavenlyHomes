@@ -53,38 +53,37 @@ export default function SignUp() {
   return (
     <>
       {success && (
-        <div className="w-[180px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[28%] right-[1.8%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#373a36] md:text-[#373a36]">
+        <div className="w-[200px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[34%] right-[1.8%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#373a36] md:text-[#373a36]">
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
-            Account created Successfully
+            Account created successfully!
           </Alert>
-
           {setTimeout(() => {
             setSuccess(false);
           }, 4000)}
         </div>
       )}
       {error && (
-        <div className="w-[180px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute  items-center top-[28%] right-[0%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#373a36] md:text-[#373a36]">
+        <div className="w-[200px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute  items-center top-[34%] right-[0%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#373a36] md:text-[#373a36]">
           {error === "User not found!" ? (
             <Alert severity="warning">
               <AlertTitle>Warning</AlertTitle>
-              User not found!.
+              User not found!
             </Alert>
           ) : error === "Wrong credentials!" ? (
             <Alert severity="info">
               <AlertTitle>Info</AlertTitle>
-              Your email or password is invalid.
+              Your email or password is invalid!
             </Alert>
           ) : error[65] === "u" ? (
             <Alert severity="info">
               <AlertTitle>Info</AlertTitle>
-              User Already Exists.
+              User already exists!
             </Alert>
           ) : (
             <Alert severity="info">
               <AlertTitle>Info</AlertTitle>
-              Email already exists.
+              Email already exists!
             </Alert>
           )}
           {setTimeout(() => {

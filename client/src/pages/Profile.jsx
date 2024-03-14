@@ -6,7 +6,7 @@ import {
   Bolt,
   XCircle,
 } from "lucide-react";
-import Avatar from "../components/avatar.png";
+import Avatar from "../assets/avatar.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useRef, useState, useEffect } from "react";
 import {
@@ -228,18 +228,18 @@ export default function Profile() {
   return (
     <>
       {deleteOption ? (
-        <div className="w-[300px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[5%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
+        <div className="w-[300px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[5%] right-[9%] md:top-[10%] md:right-[1%] lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166] transition-all ease-in duration-3">
           <Alert severity="warning">
             <AlertTitle>Warning</AlertTitle>
             <button
               onClick={handleDeleteUser}
-              className="text-sm border border-black active:text-xs text-red-500 rounded px-2 py-1 mr-2"
+              className="text-sm bg-red-500 active:text-xs text-white font-semibold rounded px-2 py-1 mr-2"
             >
               Delete Account
             </button>
             <button
               onClick={handledeleteBtn}
-              className="text-sm active:text-xs border border-black rounded px-2 py-1"
+              className="text-sm active:text-xs bg-blue-500 rounded px-2 py-1 text-white"
             >
               Cancel
             </button>
@@ -249,7 +249,7 @@ export default function Profile() {
         ""
       )}
       {error ? (
-        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[5%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
+        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[10%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
           <Alert severity="info">
             <AlertTitle>Info</AlertTitle>
             Unauthorized file
@@ -259,7 +259,7 @@ export default function Profile() {
           }, 5000)}
         </div>
       ) : alertError ? (
-        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[5%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
+        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[10%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
           <Alert severity="warning">
             <AlertTitle>Warning</AlertTitle>
             {alertError ? alertError : "Unauthorized"}
@@ -269,7 +269,7 @@ export default function Profile() {
           }, 5000)}
         </div>
       ) : !sizepermit ? (
-        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[5%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
+        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[10%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#e6e2dd] md:text-[#d48166] text-[#d48166]">
           <Alert severity="info">
             <AlertTitle>Info</AlertTitle>
             Ensure file size less than 2mb
@@ -318,7 +318,7 @@ export default function Profile() {
           </div>
         </div>
       ) : alertSuccess ? (
-        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[1%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#d48166] md:text-[#d48166] lg:text-[#e6e2dd]">
+        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[10%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#d48166] md:text-[#d48166] lg:text-[#e6e2dd]">
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
             Profile successfully updated
@@ -328,7 +328,7 @@ export default function Profile() {
           }, 4000)}
         </div>
       ) : deleteSuccess ? (
-        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[1%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#d48166] md:text-[#d48166] lg:text-[#e6e2dd]">
+        <div className="w-[280px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[2%] right-[10%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#d48166] md:text-[#d48166] lg:text-[#e6e2dd]">
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
             Listing deleted successfully!
@@ -340,7 +340,7 @@ export default function Profile() {
       ) : (
         ""
       )}
-      <section className="flex flex-col mx-3 mt-12 md:mt-8  bg-[#d48166] rounded-xl shadow-xl overflow-hidden md:mx-auto max-w-sm lg:w-8/12 font-normaltext px-4 py-3">
+      <section className="flex flex-col mx-6 mt-12 md:mt-8 bg-[#d48166] rounded-xl shadow-xl overflow-hidden md:mx-auto max-w-sm lg:w-8/12 font-normaltext px-4 py-3">
         <div className="flex flex-col mx-auto w-[95%] md:w-[90%]">
           <form onSubmit={handleSubmit} className="mt-2 md:mt-3">
             <h2 className="text-center text-xl mt-1 md:text-3xl font-bold leading-tight text-[#373a36]">
@@ -450,7 +450,7 @@ export default function Profile() {
         <button
           disabled={deleteOption}
           onClick={handledeleteBtn}
-          className="mx-2 bg-red-500 px-3 py-2 text-center rounded hover:bg-red-500/80 active:bg-red-500/60"
+          className="mx-2 bg-red-500 px-3 py-2 text-center rounded hover:bg-red-400/80 active:bg-red-400/60"
         >
           <UserX className="ml-2" size={20} />
         </button>
@@ -465,20 +465,20 @@ export default function Profile() {
         <button
           disabled={deleteOption}
           onClick={handleSignOut}
-          className="mx-2 bg-blue-500 px-3 py-2 text-center rounded hover:bg-blue-500/80 active:bg-blue-500/60"
+          className="mx-2 bg-blue-500 px-3 py-2 text-center rounded hover:bg-blue-400/80 active:bg-blue-400/60"
         >
           <LogOut className="ml-2" size={20} />
         </button>
       </div>
       {userListings && userListings.length > 0 && (
-        <div className="flex flex-col mx-2 items-center md:mx-auto max-w-sm lg:w-8/12 mt-4 justify-between rounded-lg p-3 gap-4">
+        <div className="flex flex-col mx-2 items-center md:mx-auto max-w-sm lg:w-8/12 mt-4 justify-between rounded-lg p-3 gap-4 font-normaltext">
           <h1 className="text-center mt-7 text-2xl font-semibold">
             Your Listings
           </h1>
           {userListings.map((listing) => (
             <div
               key={listing._id}
-              className="mx-2 w-full items-center mt-4 flex justify-between border border-slate-300 rounded-lg p-3 gap-4"
+              className="mx-2 w-full items-center mt-4 flex justify-between border border-[#373a36]/40 p-3 gap-4"
             >
               <Link to={`/listing/${listing._id}`}>
                 <img
@@ -488,7 +488,7 @@ export default function Profile() {
                 />
               </Link>
               <Link
-                className="flex-1 text-slate-700 font-semibold hover:underline truncate ml-2"
+                className="flex-1 text-black font-semibold hover:text-blue-600 truncate ml-2"
                 to={`/listing/${listing._id}`}
               >
                 <p>{listing.name}</p>

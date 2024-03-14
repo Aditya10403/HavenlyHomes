@@ -1,6 +1,6 @@
 import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "./logo.png";
+import logo from "../assets/logo.png";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 

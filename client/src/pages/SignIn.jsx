@@ -69,7 +69,7 @@ export default function SignIn() {
   return (
     <>
       {success && (
-        <div className="w-[180px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[28%] right-[1.8%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#373a36] md:text-[#373a36]">
+        <div className="w-[230px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[33%] right-[1.8%] md:top-[10%] md:right-[2%] transition-all ease-in text-[#373a36] md:text-[#373a36]">
           <Alert severity="success">
             <AlertTitle>Success</AlertTitle>
             Welcome to Havenly Homes
@@ -81,7 +81,7 @@ export default function SignIn() {
         </div>
       )}
       {Error && (
-        <div className="w-[180px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[28%] right-[0%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#373a36] md:text-[#e6e2dd] text-[#373a36]">
+        <div className="w-[230px] h-[30px] md:w-[300px] md:h-[50px] mt-8 absolute items-center top-[35%] right-[1%] md:top-[10%] md:right-[1%] transition-all ease-in lg:text-[#373a36] md:text-[#e6e2dd] text-[#373a36]">
           {Error === "User not found!" ? (
             <Alert severity="warning">
               <AlertTitle>Warning</AlertTitle>
@@ -90,7 +90,7 @@ export default function SignIn() {
           ) : Error === "Wrong credentials!" ? (
             <Alert severity="info">
               <AlertTitle>Info</AlertTitle>
-              Invalid Credentials
+              Invalid credentials!
             </Alert>
           ) : (
             <Alert severity="success">
@@ -103,7 +103,7 @@ export default function SignIn() {
           }, 5000)}
         </div>
       )}
-      <section className="mx-3 mt-4 md:mt-14 mb-5 flex bg-[#373a36] rounded-xl shadow-xl overflow-hidden md:mx-auto max-w-sm lg:max-w-4xl font-normaltext transition-all ease-in-out 2s">
+      <section className="mx-3 mt-4 md:mt-14 mb-20 flex bg-[#373a36] rounded-xl shadow-xl overflow-hidden md:mx-auto max-w-sm lg:max-w-4xl font-normaltext transition-all ease-in-out duration-3">
         <div className="grid grid-cols-1 lg:grid-cols-2">
           <div className="h-full w-full">
             <img

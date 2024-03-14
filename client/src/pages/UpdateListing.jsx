@@ -6,13 +6,20 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import {
+  FaBath,
+  FaBed,
+  FaChair,
+  FaParking,
+  FaRupeeSign,
+} from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { app } from "../firebase";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import Avatar from "../components/avatar.png";
-import { Upload, IndianRupee, Bed, Bath, Delete } from "lucide-react";
+import Avatar from "../assets/avatar.png";
+import { Upload, Delete } from "lucide-react";
 import { useEffect } from "react";
 
 export default function UpdateListing() {
@@ -384,7 +391,15 @@ export default function UpdateListing() {
                   onChange={handleChange}
                   checked={formData.parking}
                 />
-                <span>Parking spot</span>
+                <span className="flex items-center">
+                  Parking spot
+                  <FaParking
+                    className="ml-1"
+                    size={18}
+                    color="green"
+                    strokeWidth={2.5}
+                  />
+                </span>
               </div>
               <div className="flex gap-2">
                 <input
@@ -394,7 +409,15 @@ export default function UpdateListing() {
                   onChange={handleChange}
                   checked={formData.furnished}
                 />
-                <span>Furnished</span>
+                <span className="flex items-center">
+                  Furnished
+                  <FaChair
+                    className="ml-1"
+                    size={18}
+                    color="brown"
+                    strokeWidth={2.5}
+                  />
+                </span>
               </div>
               <div className="flex gap-2">
                 <input
@@ -421,10 +444,10 @@ export default function UpdateListing() {
                 />
                 <p className="flex items-center">
                   Beds{" "}
-                  <Bed
+                  <FaBed
                     className="ml-1"
                     size={18}
-                    color="#d48166"
+                    color="brown"
                     strokeWidth={2.5}
                   />
                 </p>
@@ -442,10 +465,9 @@ export default function UpdateListing() {
                 />
                 <p className="flex items-center">
                   Baths{" "}
-                  <Bath
-                    className="ml-1"
+                  <FaBath
+                    className="ml-1 text-blue-500"
                     size={18}
-                    color="#d48166"
                     strokeWidth={2.5}
                   />
                 </p>
@@ -463,11 +485,11 @@ export default function UpdateListing() {
                 />
                 <div className="flex flex-col items-center">
                   <p>Regular price</p>
-                  {/* {formData.type === 'rent' && ( */}
-                  <span className="text-xs flex items-center">
-                    (<IndianRupee size={12} /> / month)
-                  </span>
-                  {/* )}  */}
+                  {formData.type === "rent" && (
+                    <span className="text-xs flex items-center">
+                      (<FaRupeeSign size={11} /> / month)
+                    </span>
+                  )}
                 </div>
               </div>
               {formData.offer && (
@@ -485,11 +507,11 @@ export default function UpdateListing() {
                   <div className="flex flex-col items-center">
                     <p>Discounted price</p>
 
-                    {/* {formData.type === 'rent' && ( */}
-                    <span className="text-xs flex items-center">
-                      (<IndianRupee size={12} /> / month)
-                    </span>
-                    {/* )} */}
+                    {formData.type === "rent" && (
+                      <span className="text-xs flex items-center">
+                        (<FaRupeeSign size={11} /> / month)
+                      </span>
+                    )}
                   </div>
                 </div>
               )}
