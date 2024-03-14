@@ -53,7 +53,7 @@ export default function Header() {
           </button>
         </form>
         <ul className="flex gap-4 items-center">
-          <Link to={"/home"}>
+          <Link to={"/"}>
             <li className="hidden sm:inline active:bg-white active:text-[#d48166] transition-all ease-in 2s font-mono border-2 border-white bg-[#d48166] px-3 py-2 text-xs text-white">
               HOME
             </li>

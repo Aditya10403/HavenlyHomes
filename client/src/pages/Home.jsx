@@ -53,17 +53,23 @@ export default function Home() {
           <span className="text-[#d48166] text-4xl lg:text-7xl">Perfect</span>
           <br className="hidden md:block" /> place with ease
         </h1>
-        <div className="text-gray-400 text-xs sm:text-sm">
+        <div className="text-gray-400 text-xs sm:text-sm ml-1">
           Discover your haven in our Havenly homes,
           <br /> where every door opens to possibility and every window frames a
           dream.
         </div>
-        <Link
-          to={"/search"}
-          className="text-xs sm:text-sm text-blue-600 font-bold hover:underline"
-        >
-          Let's get started...
-        </Link>
+        <div class="flex items-center gap-x-6">
+          <Link
+            to={"/search"}
+            class="rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          >
+            Get started
+          </Link>
+          <Link to={"/about"} class="text-sm font-semibold leading-6 text-gray-900">
+            Learn more <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+
       </div>
 
       <Swiper navigation>
