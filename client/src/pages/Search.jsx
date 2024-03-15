@@ -121,7 +121,7 @@ export default function Search() {
     const numberOfListings = listings.length;
     const startIndex = numberOfListings;
     const urlParams = new URLSearchParams(location.search);
-    urlParams.set('startIndex', startIndex);
+    urlParams.set("startIndex", startIndex);
     const searchQuery = urlParams.toString();
     const res = await fetch(`/api/listing/get?${searchQuery}`);
     const data = await res.json();
@@ -245,7 +245,7 @@ export default function Search() {
             <div className="w-full h-full flex justify-center mt-[30%]">
               <svg
                 aria-hidden="true"
-                className="inline w-8 h-8 text-gray-200 animate-spin dark:text-[#373a36] fill-[#3b82f6]"
+                className="inline w-8 h-8 text-gray-200 animate-spin dark:text-[#373a36] fill-[#d48166]"
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"

@@ -222,7 +222,6 @@ export default function CreateListing() {
       setLoading(false);
     }
   };
-  console.log(formData);
   return (
     <>
       {error ? (
