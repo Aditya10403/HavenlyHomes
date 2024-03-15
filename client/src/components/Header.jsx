@@ -78,9 +78,11 @@ export default function Header() {
               alt="?"
             ></img>
           ) : (
-            <li className="sm:inline bg-[#d48166] active:bg-white active:text-[#d48166] transition-all ease-in 2s font-mono border-2 border-white p-1 text-xs sm:px-3 sm:py-2 text-white cursor-pointer">
-              SIGN IN
-            </li>
+            <Link to={"/sign-in"}>
+              <li className="sm:inline bg-[#d48166] active:bg-white active:text-[#d48166] transition-all ease-in 2s font-mono border-2 border-white p-1 text-xs sm:px-3 sm:py-2 text-white cursor-pointer">
+                SIGN IN
+              </li>
+            </Link>
           )}
           {/* </Link> */}
         </ul>
