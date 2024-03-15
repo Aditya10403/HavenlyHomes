@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import Sidebar from "./Sidebar";
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchMenu, setSearchMenu] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -25,9 +27,13 @@ export default function Header() {
     }
   }, [location.search]);
 
+  const toggleMenu = () => {
+    setSearchMenu(!searchMenu);
+  };
+
   return (
     <header className="w-full">
-      <div className="flex justify-between items-center mx-auto p-2 md:p-3 bg-[#d48166] font-funtext shadow-md">
+      <div className="flex justify-between items-center mx-auto p-3 bg-[#d48166] font-funtext shadow-md">
         <Link to={"/"}>
           <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
             <img
@@ -63,21 +69,23 @@ export default function Header() {
               ABOUT
             </li>
           </Link>
-          <Link to={"/profile"}>
-            {currentUser ? (
-              <img
-                className="rounded-full w-8 h-8 md:h-10 md:w-10 shadow-md object-cover mr-1"
-                src={currentUser.avatar}
-                alt="?"
-              ></img>
-            ) : (
-              <li className="sm:inline bg-[#d48166] active:bg-white active:text-[#d48166] transition-all ease-in 2s font-mono border-2 border-white p-1 text-xs sm:px-3 sm:py-2 text-white">
-                SIGN IN
-              </li>
-            )}
-          </Link>
+          {/* <Link to={"/profile"}> */}
+          {currentUser ? (
+            <img
+              onClick={toggleMenu}
+              className="rounded-full w-8 h-8 md:h-10 md:w-10 shadow-md object-cover mr-1 cursor-pointer"
+              src={currentUser.avatar}
+              alt="?"
+            ></img>
+          ) : (
+            <li className="sm:inline bg-[#d48166] active:bg-white active:text-[#d48166] transition-all ease-in 2s font-mono border-2 border-white p-1 text-xs sm:px-3 sm:py-2 text-white cursor-pointer">
+              SIGN IN
+            </li>
+          )}
+          {/* </Link> */}
         </ul>
       </div>
+      <Sidebar searchMenu={searchMenu} />
     </header>
   );
 }
